@@ -1,3 +1,6 @@
+import datetime
+import math
+import json
 from flask import request, session, jsonify, g
 from app.models import db, OldPerson, to_json
 from . import old_person
@@ -57,7 +60,7 @@ def add_old_person():
 
     print(id[0])
 
-    return jsonify(msg="老人" + username + "信息录入成功，老人的编号为" + str(id[0]) + "，请告知老人哟", code=200)
+    return jsonify(msg="老人" + username + "信息录入成功，老人的编号为" + str(id[0]) + "，请告知老人哟", id=str(id[0]), code=200)
 
 
 @old_person.route("/modify", methods=["POST"])
@@ -163,7 +166,7 @@ def checkout_old_person():
     try:
         if OldPerson.query.filter(OldPerson.id == id).count() == 0:
             return jsonify(msg="该老人不存在，检查一下吧！", code=4000)
-        OldPerson.query.filter(OldPerson.id == id).update({"is_active" : 0})
+        OldPerson.query.filter(OldPerson.id == id).update({"is_active": 0})
         db.session.commit()
     except Exception as e:
         print(e)
@@ -187,10 +190,55 @@ def query_all_old_person():
     return jsonify(msg="test", code=4000)
 
 
+@old_person.route("/query", methods=["POST"])
+def query():
+    """
+    {
+        "id":123
+    }
+    删除老人信息
+    :return:
+    """
+    get_data = request.get_json()
+    id = get_data.get("id")
+
+    if not all([id]):
+        return jsonify(msg="参数不全，有缺项", code=4000)
+
+    try:
+        if OldPerson.query.filter(OldPerson.id == id).count() == 0:
+            return jsonify(msg="该老人不存在，检查一下吧！", code=4000)
+        result = OldPerson.query.filter(OldPerson.id == id).first()
+        return result.single_to_dict()
+    except Exception as e:
+        print(e)
+
+    return jsonify(msg="test", code=4001)
+
+
 @old_person.route("/statistics", methods=["GET"])
 def statistics():
     """
     获取老人的统计信息
     :return:
     """
-    pass
+    try:
+        d = datetime.date.today()
+        today = str(d.year) + '-' + str(d.month) + '-' + str(d.day)
+        data = {"1": OldPerson.query.filter(OldPerson.birthday.between('1800-01-01', '1959-12-31')).count(),
+                "2": OldPerson.query.filter(OldPerson.birthday.between('1960-01-01', '1969-12-31')).count(),
+                "3": OldPerson.query.filter(OldPerson.birthday.between('1970-01-01', '1979-12-31')).count(),
+                "4": OldPerson.query.filter(OldPerson.birthday.between('1980-01-01', '1989-12-31')).count(),
+                "5": OldPerson.query.filter(OldPerson.birthday.between('1990-01-01', today)).count()}
+        return jsonify(msg=json.dumps(data), code=200)
+    except Exception as e:
+        print(e)
+
+    return jsonify(msg="test", code=4000)
+
+
+def get_age(birth):
+    d = birth.split('-')
+    today = datetime.datetime.today()
+    bir = datetime.date(year=int(d[0]), month=int(d[1]), day=int(d[2]))
+    return math.floor((today - bir).days / 365.0)
