@@ -1,3 +1,6 @@
+import datetime
+import math
+import json
 from flask import request, session, jsonify, g
 from app.models import db, Volunteer, to_json
 from . import volunteer
@@ -44,7 +47,7 @@ def add_volunteer():
 
     print(id[0])
 
-    return jsonify(msg="义工" + username + "信息录入成功，该义工的编号为" + str(id[0]) + "，请告知该义工哟", code=200)
+    return jsonify(msg="义工" + username + "信息录入成功，该义工的编号为" + str(id[0]) + "，请告知该义工哟", id=str(id[0]), code=200)
 
 
 @volunteer.route("/modify", methods=["POST"])
@@ -159,10 +162,56 @@ def query_volunteer():
     return jsonify(msg="test", code=4000)
 
 
+@volunteer.route("/query", methods=["POST"])
+def query():
+    """
+    {
+        "id":123
+    }
+    删除老人信息
+    :return:
+    """
+    get_data = request.get_json()
+    id = get_data.get("id")
+
+    if not all([id]):
+        return jsonify(msg="参数不全，有缺项", code=4000)
+
+    try:
+        if Volunteer.query.filter(Volunteer.id == id).count() == 0:
+            return jsonify(msg="该工作人员不存在，检查一下吧！", code=4000)
+        result = Volunteer.query.filter(Volunteer.id == id).first()
+        return result.single_to_dict()
+    except Exception as e:
+        print(e)
+
+    return jsonify(msg="test", code=4001)
+
+
 @volunteer.route("/statistics", methods=["GET"])
 def statistics():
     """
     获取义工的统计信息
     :return:
     """
-    pass
+    try:
+        d = datetime.date.today()
+        today = str(d.year) + '-' + str(d.month) + '-' + str(d.day)
+        data = {"1": Volunteer.query.filter(Volunteer.birthday.between('1800-01-01', '1959-12-31')).count(),
+                "2": Volunteer.query.filter(Volunteer.birthday.between('1960-01-01', '1969-12-31')).count(),
+                "3": Volunteer.query.filter(Volunteer.birthday.between('1970-01-01', '1979-12-31')).count(),
+                "4": Volunteer.query.filter(Volunteer.birthday.between('1980-01-01', '1989-12-31')).count(),
+                "5": Volunteer.query.filter(Volunteer.birthday.between('1990-01-01', today)).count()}
+        return jsonify(msg=json.dumps(data), code=200)
+    except Exception as e:
+        print(e)
+
+    return jsonify(msg="test", code=4000)
+
+
+def get_age(birth):
+    d = birth.split('-')
+    today = datetime.datetime.today()
+    bir = datetime.date(year=int(d[0]), month=int(d[1]), day=int(d[2]))
+    return math.floor((today - bir).days / 365.0)
+
