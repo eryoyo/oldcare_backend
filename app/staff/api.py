@@ -1,3 +1,6 @@
+import datetime
+import math
+import json
 from flask import request, session, jsonify, g
 from app.models import db, Staff, to_json
 from . import staff
@@ -44,7 +47,7 @@ def add_staff():
 
     print(id[0])
 
-    return jsonify(msg="工作人员" + username + "信息录入成功，该工作人员的编号为" + str(id[0]) + "，请告知工作人员哟", code=200)
+    return jsonify(msg="工作人员" + username + "信息录入成功，该工作人员的编号为" + str(id[0]) + "，请告知工作人员哟", id=str(id[0]), code=200)
 
 
 @staff.route("/modify", methods=["POST"])
@@ -160,10 +163,56 @@ def query_all_staff():
     return jsonify(msg="test", code=4000)
 
 
+@staff.route("/query", methods=["POST"])
+def query():
+    """
+    {
+        "id":123
+    }
+    删除老人信息
+    :return:
+    """
+    get_data = request.get_json()
+    id = get_data.get("id")
+
+    if not all([id]):
+        return jsonify(msg="参数不全，有缺项", code=4000)
+
+    try:
+        if Staff.query.filter(Staff.id == id).count() == 0:
+            return jsonify(msg="该工作人员不存在，检查一下吧！", code=4000)
+        result = Staff.query.filter(Staff.id == id).first()
+        return result.single_to_dict()
+    except Exception as e:
+        print(e)
+
+    return jsonify(msg="test", code=4001)
+
+
 @staff.route("/statistics", methods=["GET"])
 def statistics():
     """
     获取工作人员的统计信息
     :return:
     """
-    pass
+    try:
+        d = datetime.date.today()
+        today = str(d.year) + '-' + str(d.month) + '-' + str(d.day)
+        data = {"1": Staff.query.filter(Staff.birthday.between('1800-01-01', '1959-12-31')).count(),
+                "2": Staff.query.filter(Staff.birthday.between('1960-01-01', '1969-12-31')).count(),
+                "3": Staff.query.filter(Staff.birthday.between('1970-01-01', '1979-12-31')).count(),
+                "4": Staff.query.filter(Staff.birthday.between('1980-01-01', '1989-12-31')).count(),
+                "5": Staff.query.filter(Staff.birthday.between('1990-01-01', today)).count()}
+        return jsonify(msg=json.dumps(data), code=200)
+    except Exception as e:
+        print(e)
+
+    return jsonify(msg="test", code=4000)
+
+
+def get_age(birth):
+    d = birth.split('-')
+    today = datetime.datetime.today()
+    bir = datetime.date(year=int(d[0]), month=int(d[1]), day=int(d[2]))
+    return math.floor((today - bir).days / 365.0)
+
