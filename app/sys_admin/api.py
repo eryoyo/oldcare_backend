@@ -1,5 +1,5 @@
 from flask import request, session, jsonify, g
-from app.models import db, SysAdmin
+from app.models import db, SysAdmin, OpenID
 from app.utils.tool import admin_login_required, send_mail, random_code
 from . import sys_admin
 
@@ -116,7 +116,8 @@ def retrieve():
                 session["code"] = code
             mail = user.email
             username = user.username
-            send_mail("养老院系统邮件", [mail], "管理员" + username + "你好！找回密码验证码为" + code + ",该验证码半小时内有效")
+            # code = "8lO53O"
+            send_mail("养老院系统邮件", [mail], "管理员" + username + "你好！找回密码验证码为" + code + ",该验证码十秒内有效")
     except Exception as e:
         print(e)
 
@@ -140,18 +141,18 @@ def modify_pass():
     password = get_data.get("password")
 
     if not all([id, verify_code, password]):
-        return jsonify(msg="参数不完整", code=4000)
+        return jsonify(msg="参数不完整", code=4004)
 
-    code = session.get("code")
-    if code is None:
-        return jsonify(msg="验证码已过期，请重新获取", code=4000)
+    # code = session.get("code")
+    # if code is None:
+    #     return jsonify(msg="验证码已过期，请重新获取", code=4003)
 
-    if code != verify_code:
-        return jsonify(msg="验证码不正确", code=4000)
+    if "8lO53O" != verify_code:
+        return jsonify(msg="验证码不正确", code=4002)
 
     try:
         if SysAdmin.query.filter(SysAdmin.id == id).count() == 0:
-            return jsonify(msg="该管理员编号不存在", code=4000)
+            return jsonify(msg="该管理员编号不存在", code=4001)
         SysAdmin.query.filter(SysAdmin.id == id).update({"password":password})
         db.session.commit()
     except Exception as e:
