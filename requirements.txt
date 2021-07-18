@@ -1,0 +1,100 @@
+absl-py==0.13.0
+alembic==1.6.5
+astor==0.8.1
+bidict==0.21.2
+blinker==1.4
+blurhash==1.1.4
+boost==0.1
+cached-property==1.5.2
+cachelib==0.2.0
+cachetools==4.2.2
+certifi==2021.5.30
+cffi @ file:///D:/bld/cffi_1625835485017/work
+chardet==4.0.0
+click @ file:///D:/bld/click_1621503870656/work
+cmake==3.20.5
+colorama @ file:///home/conda/feedstock_root/build_artifacts/colorama_1602866480661/work
+cryptography==3.4.7
+cycler==0.10.0
+decorator==5.0.9
+dlib==19.22.0
+dnspython==1.16.0
+face-recognition==1.3.0
+face-recognition-models==0.3.0
+Flask==1.1.2
+Flask-Cors==3.0.10
+Flask-Login==0.5.0
+Flask-Mail==0.9.1
+Flask-Migrate==2.7.0
+Flask-Script==2.0.6
+Flask-Session==0.4.0
+Flask-SocketIO==4.3.1
+Flask-SQLAlchemy==2.5.1
+gast==0.2.2
+google-auth==1.32.1
+google-auth-oauthlib==0.4.4
+google-pasta==0.2.0
+greenlet==1.1.0
+grpcio==1.38.1
+h5py==2.10.0
+idna==2.10
+imageio==2.9.0
+importlib-metadata @ file:///D:/bld/importlib-metadata_1624799579674/work
+imutils==0.5.4
+itsdangerous @ file:///home/conda/feedstock_root/build_artifacts/itsdangerous_1621360792037/work
+Jinja2 @ file:///home/conda/feedstock_root/build_artifacts/jinja2_1621419064915/work
+joblib==1.0.1
+Keras==2.3.1
+Keras-Applications==1.0.8
+Keras-Preprocessing==1.1.2
+kiwisolver==1.3.1
+Mako==1.1.4
+Markdown==3.3.4
+MarkupSafe @ file:///D:/bld/markupsafe_1621455845013/work
+Mastodon.py==1.5.1
+matplotlib==3.4.2
+numpy @ file:///D:/bld/numpy_1624400122520/work
+oauthlib==3.1.1
+opencv-contrib-python==3.4.4.19
+opencv-python==3.4.4.19
+opt-einsum==3.3.0
+pandas==1.3.0
+Pillow==8.3.0
+protobuf==3.17.3
+pyasn1==0.4.8
+pyasn1-modules==0.2.8
+pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1593275161868/work
+pygame==1.9.6
+PyMySQL==1.0.2
+pyparsing==2.4.7
+python-dateutil==2.8.1
+python-editor==1.0.4
+python-engineio==3.13.2
+python-magic==0.4.24
+python-socketio==4.6.0
+pytz==2021.1
+PyYAML==5.4.1
+redis==3.5.3
+requests==2.25.1
+requests-oauthlib==1.3.0
+rsa==4.7.2
+scikit-learn==0.24.2
+scipy==1.2.1
+six==1.16.0
+sklearn==0.0
+SQLAlchemy==1.4.20
+tensorboard==1.14.0
+tensorflow==1.14.0
+tensorflow-estimator==1.14.0
+termcolor==1.1.0
+threadpoolctl==2.1.0
+torch==1.4.0
+torchvision==0.5.0
+tqdm==4.15.0
+typing-extensions @ file:///home/conda/feedstock_root/build_artifacts/typing_extensions_1622748266870/work
+urllib3==1.26.6
+Werkzeug @ file:///home/conda/feedstock_root/build_artifacts/werkzeug_1621518206714/work
+wincertstore==0.2
+wrapt==1.12.1
+xmltodict==0.12.0
+zipp @ file:///home/conda/feedstock_root/build_artifacts/zipp_1625284368454/work
